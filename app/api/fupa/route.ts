@@ -5,8 +5,6 @@ const FUPA_URL =
 
 const OWN_TEAM_SLUG = "sg-stuttgart-west-m1-2025-26";
 
-export const revalidate = 3600; // cache 1 hour
-
 export async function GET() {
   try {
     const res = await fetch(FUPA_URL, {
@@ -16,7 +14,7 @@ export async function GET() {
         Accept: "text/html,application/xhtml+xml",
         "Accept-Language": "de-DE,de;q=0.9",
       },
-      next: { revalidate: 3600 },
+      next: { tags: ["fupa-table"], revalidate: false },
     });
 
     if (!res.ok) {

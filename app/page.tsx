@@ -38,7 +38,7 @@ async function fetchLigaTable(): Promise<TableEntry[]> {
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
       : "http://localhost:3000";
     const res = await fetch(`${baseUrl}/api/fupa`, {
-      next: { revalidate: 3600 },
+      next: { tags: ["fupa-table"], revalidate: false },
     });
     if (!res.ok) throw new Error(`status ${res.status}`);
     const json = await res.json();
