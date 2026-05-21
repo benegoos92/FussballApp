@@ -6,6 +6,6 @@ export async function GET(request: Request) {
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
-  revalidateTag("fupa-table");
+  revalidateTag("fupa-table", {});
   return NextResponse.json({ ok: true, revalidated: new Date().toISOString() });
 }

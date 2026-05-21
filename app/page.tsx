@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { LIGA_FIXTURES, LIGA_TABLE, type TableEntry } from "@/lib/liga-data";
+import { LIGA_FIXTURES, LIGA_TABLE, type TableEntry, type Fixture } from "@/lib/liga-data";
 
 export const revalidate = 60;
 
@@ -32,7 +32,7 @@ function fmtShort(d: string) {
   });
 }
 
-async function fetchLigaTable(): Promise<TableEntry[]> {
+async function fetchFupaData(): Promise<{ table: TableEntry[]; fixtures: Fixture[] }> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
@@ -42,24 +42,26 @@ async function fetchLigaTable(): Promise<TableEntry[]> {
     });
     if (!res.ok) throw new Error(`status ${res.status}`);
     const json = await res.json();
-    if (json.table?.length) return json.table as TableEntry[];
+    return {
+      table: json.table?.length ? (json.table as TableEntry[]) : LIGA_TABLE,
+      fixtures: json.fixtures?.length ? (json.fixtures as Fixture[]) : LIGA_FIXTURES,
+    };
   } catch {
-    // fall through to static fallback
+    return { table: LIGA_TABLE, fixtures: LIGA_FIXTURES };
   }
-  return LIGA_TABLE;
 }
 
 export default async function DashboardPage() {
   const today = new Date().toISOString().slice(0, 10);
 
-  const [[{ data: events }, { data: players }, { data: attendances }], ligaTable] =
+  const [[{ data: events }, { data: players }, { data: attendances }], { table: ligaTable, fixtures: ligaFixtures }] =
     await Promise.all([
       Promise.all([
         supabase.from("events").select("*").gte("date", today).order("date").order("start_time").limit(5),
         supabase.from("players").select("id").eq("active", true),
         supabase.from("event_attendances").select("*"),
       ]),
-      fetchLigaTable(),
+      fetchFupaData(),
     ]);
 
   const upcoming = events ?? [];
@@ -226,7 +228,7 @@ export default async function DashboardPage() {
           <span className="text-xs text-gray-400">2025/26</span>
         </div>
         <div className="space-y-2">
-          {LIGA_FIXTURES.map((fix, i) => (
+          {ligaFixtures.map((fix, i) => (
             <div
               key={i}
               className={`bg-white border rounded-xl px-4 py-3 flex items-center gap-3 shadow-sm ${
