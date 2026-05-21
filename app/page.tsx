@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { LIGA_TABLE, LIGA_FIXTURES, LIGA_NAME, FUSSBALL_DE_URL } from "@/lib/liga-data";
+import { LIGA_FIXTURES } from "@/lib/liga-data";
+import FupaWidget from "@/components/FupaWidget";
 
 export const revalidate = 60;
 
@@ -51,7 +52,7 @@ export default async function DashboardPage() {
   const absagen = nextAtt.filter(a => a.status === "absage").length;
   const pending = activeCount - zusagen - absagen;
 
-  const ownRow = LIGA_TABLE.find(t => t.isOwn);
+  const FUPA_LEAGUE_SLUG = "kreisliga-a1-stuttgart-boeblingen";
 
   return (
     <div className="space-y-6">
@@ -99,10 +100,8 @@ export default async function DashboardPage() {
           <p className="text-2xl sm:text-3xl font-black text-green-600">{zusagen}</p>
           <p className="text-xs text-gray-400 mt-1">Zusagen</p>
         </div>
-        <div className={`rounded-xl border p-4 text-center shadow-sm ${ownRow ? "bg-green-50 border-green-200" : "bg-white border-gray-200"}`}>
-          <p className={`text-2xl sm:text-3xl font-black ${ownRow ? "text-green-700" : "text-gray-800"}`}>
-            {ownRow ? `${ownRow.pos}.` : "–"}
-          </p>
+        <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center shadow-sm">
+          <p className="text-2xl sm:text-3xl font-black text-green-700">9.</p>
           <p className="text-xs text-gray-400 mt-1">Tabellenplatz</p>
         </div>
       </div>
@@ -144,50 +143,20 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Liga Table */}
+        {/* Liga Table – live via fupa */}
         <div className="lg:col-span-3">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-800">Ligatabelle</h3>
-            <a href={FUSSBALL_DE_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-green-600 hover:underline font-medium">
-              fussball.de ↗
+            <a
+              href={`https://www.fupa.net/league/${FUPA_LEAGUE_SLUG}/standing`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-green-600 hover:underline font-medium"
+            >
+              fupa.net ↗
             </a>
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-100 text-gray-400">
-                  <th className="text-left px-3 py-2 font-semibold w-7">#</th>
-                  <th className="text-left px-2 py-2 font-semibold">Verein</th>
-                  <th className="text-center px-2 py-2 font-semibold">Sp</th>
-                  <th className="text-center px-2 py-2 font-semibold hidden sm:table-cell">Tore</th>
-                  <th className="text-center px-3 py-2 font-semibold text-gray-600">Pkt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LIGA_TABLE.map(row => (
-                  <tr
-                    key={row.pos}
-                    className={`border-b border-gray-100 last:border-0 transition-colors ${
-                      row.isOwn ? "bg-green-50 hover:bg-green-100" : "hover:bg-gray-50"
-                    }`}
-                  >
-                    <td className={`px-3 py-2.5 font-bold ${row.isOwn ? "text-green-700" : "text-gray-400"}`}>{row.pos}</td>
-                    <td className={`px-2 py-2.5 font-medium truncate max-w-[130px] ${row.isOwn ? "text-green-700" : "text-gray-700"}`}>
-                      {row.isOwn && <span className="mr-1 text-green-500">●</span>}
-                      {row.team}
-                    </td>
-                    <td className="px-2 py-2.5 text-center text-gray-500">{row.sp}</td>
-                    <td className="px-2 py-2.5 text-center text-gray-400 hidden sm:table-cell">{row.goals}</td>
-                    <td className={`px-3 py-2.5 text-center font-bold ${row.isOwn ? "text-green-700" : "text-gray-800"}`}>{row.pts}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 text-xs text-gray-400 flex justify-between">
-              <span>{LIGA_NAME}</span>
-              <span>Stand: Mai 2026</span>
-            </div>
-          </div>
+          <FupaWidget leagueSlug={FUPA_LEAGUE_SLUG} height={420} />
         </div>
       </div>
 
