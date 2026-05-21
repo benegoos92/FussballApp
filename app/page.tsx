@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { LIGA_FIXTURES, LIGA_TABLE, type TableEntry, type Fixture } from "@/lib/liga-data";
+import { LIGA_FIXTURES, LIGA_TABLE } from "@/lib/liga-data";
+import { fetchTable, fetchFixtures } from "@/lib/fupa";
 
 export const revalidate = 60;
 
@@ -32,23 +33,12 @@ function fmtShort(d: string) {
   });
 }
 
-async function fetchFupaData(): Promise<{ table: TableEntry[]; fixtures: Fixture[] }> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/fupa`, {
-      next: { tags: ["fupa-table"], revalidate: false },
-    });
-    if (!res.ok) throw new Error(`status ${res.status}`);
-    const json = await res.json();
-    return {
-      table: json.table?.length ? (json.table as TableEntry[]) : LIGA_TABLE,
-      fixtures: json.fixtures?.length ? (json.fixtures as Fixture[]) : LIGA_FIXTURES,
-    };
-  } catch {
-    return { table: LIGA_TABLE, fixtures: LIGA_FIXTURES };
-  }
+async function fetchFupaData() {
+  const [table, fixtures] = await Promise.all([fetchTable(), fetchFixtures()]);
+  return {
+    table: table ?? LIGA_TABLE,
+    fixtures: fixtures ?? LIGA_FIXTURES,
+  };
 }
 
 export default async function DashboardPage() {
