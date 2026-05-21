@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { LIGA_FIXTURES } from "@/lib/liga-data";
-import FupaWidget from "@/components/FupaWidget";
+import { LIGA_FIXTURES, LIGA_TABLE, type TableEntry } from "@/lib/liga-data";
 
 export const revalidate = 60;
 
@@ -33,14 +32,35 @@ function fmtShort(d: string) {
   });
 }
 
+async function fetchLigaTable(): Promise<TableEntry[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/fupa`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const json = await res.json();
+    if (json.table?.length) return json.table as TableEntry[];
+  } catch {
+    // fall through to static fallback
+  }
+  return LIGA_TABLE;
+}
+
 export default async function DashboardPage() {
   const today = new Date().toISOString().slice(0, 10);
 
-  const [{ data: events }, { data: players }, { data: attendances }] = await Promise.all([
-    supabase.from("events").select("*").gte("date", today).order("date").order("start_time").limit(5),
-    supabase.from("players").select("id").eq("active", true),
-    supabase.from("event_attendances").select("*"),
-  ]);
+  const [[{ data: events }, { data: players }, { data: attendances }], ligaTable] =
+    await Promise.all([
+      Promise.all([
+        supabase.from("events").select("*").gte("date", today).order("date").order("start_time").limit(5),
+        supabase.from("players").select("id").eq("active", true),
+        supabase.from("event_attendances").select("*"),
+      ]),
+      fetchLigaTable(),
+    ]);
 
   const upcoming = events ?? [];
   const next = upcoming[0] ?? null;
@@ -52,7 +72,8 @@ export default async function DashboardPage() {
   const absagen = nextAtt.filter(a => a.status === "absage").length;
   const pending = activeCount - zusagen - absagen;
 
-  const FUPA_LEAGUE_SLUG = "kreisliga-a1-stuttgart-boeblingen";
+  const ownEntry = ligaTable.find(e => e.isOwn);
+  const ownPos = ownEntry?.pos ?? "–";
 
   return (
     <div className="space-y-6">
@@ -101,7 +122,7 @@ export default async function DashboardPage() {
           <p className="text-xs text-gray-400 mt-1">Zusagen</p>
         </div>
         <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center shadow-sm">
-          <p className="text-2xl sm:text-3xl font-black text-green-700">9.</p>
+          <p className="text-2xl sm:text-3xl font-black text-green-700">{ownPos}.</p>
           <p className="text-xs text-gray-400 mt-1">Tabellenplatz</p>
         </div>
       </div>
@@ -143,12 +164,12 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Liga Table – live via fupa */}
+        {/* Liga Table */}
         <div className="lg:col-span-3">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-800">Ligatabelle</h3>
             <a
-              href={`https://www.fupa.net/league/${FUPA_LEAGUE_SLUG}/standing`}
+              href="https://www.fupa.net/league/kreisliga-a1-stuttgart-boeblingen/standing"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-green-600 hover:underline font-medium"
@@ -156,7 +177,45 @@ export default async function DashboardPage() {
               fupa.net ↗
             </a>
           </div>
-          <FupaWidget leagueSlug={FUPA_LEAGUE_SLUG} height={420} />
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-gray-100 text-gray-400 uppercase tracking-wide">
+                  <th className="py-2 pl-3 pr-1 text-left w-7">#</th>
+                  <th className="py-2 px-1 text-left">Team</th>
+                  <th className="py-2 px-1 text-right w-7">Sp</th>
+                  <th className="py-2 px-1 text-right w-7 hidden sm:table-cell">S</th>
+                  <th className="py-2 px-1 text-right w-7 hidden sm:table-cell">U</th>
+                  <th className="py-2 px-1 text-right w-7 hidden sm:table-cell">N</th>
+                  <th className="py-2 px-1 text-right w-14 hidden sm:table-cell">Tore</th>
+                  <th className="py-2 pl-1 pr-3 text-right w-8 font-bold">Pkt</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {ligaTable.map((row) => (
+                  <tr
+                    key={row.pos}
+                    className={`${row.isOwn ? "bg-green-50" : "hover:bg-gray-50"} transition-colors`}
+                  >
+                    <td className={`py-2 pl-3 pr-1 font-bold ${row.isOwn ? "text-green-700" : "text-gray-400"}`}>
+                      {row.pos}
+                    </td>
+                    <td className={`py-2 px-1 font-medium truncate max-w-[140px] ${row.isOwn ? "text-green-800 font-bold" : "text-gray-700"}`}>
+                      {row.isOwn ? `⚽ ${row.team}` : row.team}
+                    </td>
+                    <td className="py-2 px-1 text-right text-gray-500">{row.sp}</td>
+                    <td className="py-2 px-1 text-right text-gray-500 hidden sm:table-cell">{row.w}</td>
+                    <td className="py-2 px-1 text-right text-gray-500 hidden sm:table-cell">{row.d}</td>
+                    <td className="py-2 px-1 text-right text-gray-500 hidden sm:table-cell">{row.l}</td>
+                    <td className="py-2 px-1 text-right text-gray-400 hidden sm:table-cell">{row.goals}</td>
+                    <td className={`py-2 pl-1 pr-3 text-right font-black ${row.isOwn ? "text-green-700" : "text-gray-800"}`}>
+                      {row.pts}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

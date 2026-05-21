@@ -18,21 +18,25 @@ export type Fixture = {
   time?: string;
 };
 
-// Kreisliga A1 Stuttgart/Böblingen – Stand: Mai 2026
-// Quelle: fussball.de (manuell gepflegt)
+// Kreisliga A1 Stuttgart/Böblingen – Stand: 21. Mai 2026
+// Quelle: fupa.net (live-fetched, dies ist der statische Fallback)
 export const LIGA_TABLE: TableEntry[] = [
-  { pos: 1,  team: "TSV Münchingen",           sp: 24, w: 17, d: 2, l: 5,  goals: "63:28", pts: 53 },
-  { pos: 2,  team: "SV Yesilyurt Stuttgart",   sp: 24, w: 15, d: 5, l: 4,  goals: "58:31", pts: 50 },
-  { pos: 3,  team: "TSV Weilimdorf",           sp: 24, w: 14, d: 4, l: 6,  goals: "52:32", pts: 46 },
-  { pos: 4,  team: "FK Srbija Stuttgart",      sp: 24, w: 13, d: 5, l: 6,  goals: "49:35", pts: 44 },
-  { pos: 5,  team: "SpVgg Feuerbach",          sp: 24, w: 12, d: 6, l: 6,  goals: "45:34", pts: 42 },
-  { pos: 6,  team: "FC Wangen Stuttgart",      sp: 24, w: 10, d: 7, l: 7,  goals: "41:38", pts: 37 },
-  { pos: 7,  team: "VfR Korntal",              sp: 24, w: 10, d: 4, l: 10, goals: "40:42", pts: 34 },
-  { pos: 8,  team: "SV Rohracker",             sp: 24, w: 7,  d: 5, l: 12, goals: "35:46", pts: 26 },
-  { pos: 9,  team: "SG Stuttgart West",        sp: 24, w: 6,  d: 4, l: 14, goals: "32:52", pts: 22, isOwn: true },
-  { pos: 10, team: "TSV Strohgäu",             sp: 24, w: 5,  d: 6, l: 13, goals: "28:50", pts: 21 },
-  { pos: 11, team: "FC Ohlendorf",             sp: 24, w: 4,  d: 5, l: 15, goals: "26:58", pts: 17 },
-  { pos: 12, team: "SV Türkgücü Stuttgart",    sp: 24, w: 4,  d: 3, l: 17, goals: "22:65", pts: 15 },
+  { pos: 1,  team: "OFK Beograd Stuttgart",      sp: 27, w: 22, d: 3, l: 2,  goals: "103:39",  pts: 69 },
+  { pos: 2,  team: "Türkspor Stuttgart",          sp: 27, w: 19, d: 3, l: 5,  goals: "119:48",  pts: 60 },
+  { pos: 3,  team: "SG Weilimdorf",               sp: 27, w: 18, d: 3, l: 6,  goals: "93:43",   pts: 57 },
+  { pos: 4,  team: "TSVgg Stuttgart-Münster",     sp: 27, w: 17, d: 4, l: 6,  goals: "76:42",   pts: 55 },
+  { pos: 5,  team: "Sportvg Feuerbach",           sp: 27, w: 13, d: 5, l: 9,  goals: "71:47",   pts: 44 },
+  { pos: 6,  team: "TV89 Zuffenhausen",           sp: 27, w: 12, d: 5, l: 10, goals: "64:70",   pts: 41 },
+  { pos: 7,  team: "SV Prag Stuttgart",           sp: 28, w: 11, d: 4, l: 13, goals: "75:67",   pts: 37 },
+  { pos: 8,  team: "TSV Uhlbach",                 sp: 27, w: 12, d: 1, l: 14, goals: "79:91",   pts: 37 },
+  { pos: 9,  team: "SSV Zuffenhausen",            sp: 27, w: 11, d: 3, l: 13, goals: "63:68",   pts: 36 },
+  { pos: 10, team: "TSV Weilimdorf II",           sp: 28, w: 10, d: 5, l: 13, goals: "68:66",   pts: 35 },
+  { pos: 11, team: "TV Zazenhausen",              sp: 27, w: 11, d: 2, l: 14, goals: "47:73",   pts: 35 },
+  { pos: 12, team: "SG Stuttgart West",           sp: 27, w: 10, d: 4, l: 13, goals: "56:62",   pts: 34, isOwn: true },
+  { pos: 13, team: "TSV Mühlhausen/Stuttgart",    sp: 27, w: 10, d: 3, l: 14, goals: "59:67",   pts: 33 },
+  { pos: 14, team: "TB Untertürkheim",            sp: 27, w: 6,  d: 7, l: 14, goals: "48:79",   pts: 25 },
+  { pos: 15, team: "SportKultur Stuttgart",       sp: 27, w: 3,  d: 3, l: 21, goals: "37:90",   pts: 12 },
+  { pos: 16, team: "SC Stammheim",                sp: 27, w: 3,  d: 3, l: 21, goals: "56:162",  pts: 12 },
 ];
 
 export const LIGA_FIXTURES: Fixture[] = [
