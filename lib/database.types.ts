@@ -63,6 +63,32 @@ export type Database = {
         Update: { active?: boolean; created_at?: string; email?: string | null; id?: string; jersey_number?: number | null; name?: string; phone?: string | null; photo_url?: string | null; position?: string | null; size?: string | null; updated_at?: string }
         Relationships: []
       }
+      travel_responses: {
+        Row: { id: string; event_id: string; player_name: string; travel_type: "car" | "direct" | "needs_ride"; car_seats: number | null; created_at: string }
+        Insert: { id?: string; event_id: string; player_name: string; travel_type: "car" | "direct" | "needs_ride"; car_seats?: number | null; created_at?: string }
+        Update: { id?: string; event_id?: string; player_name?: string; travel_type?: "car" | "direct" | "needs_ride"; car_seats?: number | null; created_at?: string }
+        Relationships: []
+      }
+      car_equipment: {
+        Row: { id: string; travel_response_id: string; item: string }
+        Insert: { id?: string; travel_response_id: string; item: string }
+        Update: { id?: string; travel_response_id?: string; item?: string }
+        Relationships: [
+          {
+            foreignKeyName: "car_equipment_travel_response_id_fkey"
+            columns: ["travel_response_id"]
+            isOneToOne: false
+            referencedRelation: "travel_responses"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      event_checklist: {
+        Row: { id: string; event_id: string; item: string; checked: boolean; checked_by: string | null; sort_order: number }
+        Insert: { id?: string; event_id: string; item: string; checked?: boolean; checked_by?: string | null; sort_order?: number }
+        Update: { id?: string; event_id?: string; item?: string; checked?: boolean; checked_by?: string | null; sort_order?: number }
+        Relationships: []
+      }
     }
     Views: { [_ in never]: never }
     Functions: { [_ in never]: never }

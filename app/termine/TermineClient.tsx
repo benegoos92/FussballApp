@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import type { Event, EventInsert, EventType, Player, Attendance, AttendanceStatus } from "@/lib/database.types";
 
@@ -139,6 +140,11 @@ export default function TermineClient({ events, players, attendances }: Props) {
                       <button onClick={() => setExpandedId(isExpanded ? null : event.id)} className="text-xs px-2 py-1 text-blue-600 hover:bg-blue-50 rounded">
                         {isExpanded ? "Schließen" : "Rückmeldung"}
                       </button>
+                      {event.type === "Spiel" && (
+                        <Link href={`/termine/${event.id}`} className="text-xs px-2 py-1 text-green-700 hover:bg-green-50 rounded font-medium">
+                          Anreise →
+                        </Link>
+                      )}
                       <button onClick={() => openEdit(event)} className="text-xs px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">Bearbeiten</button>
                       <button onClick={() => del(event.id)} className="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded">Löschen</button>
                     </div>
