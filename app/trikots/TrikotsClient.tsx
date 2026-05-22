@@ -269,16 +269,36 @@ export default function TrikotsClient({ sets, jerseys, players }: Props) {
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {currentJerseys.map(j => (
-                  <div key={j.id} className="bg-white border border-gray-200 rounded-lg p-3 text-center relative group">
-                    <p className="text-2xl font-bold text-gray-800">#{j.number}</p>
-                    <p className="text-xs text-gray-500">{j.size}</p>
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${STATUS_COLORS[j.status]}`}>{j.status}</span>
+                  <div key={j.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden relative group">
+                    {/* Jersey image or fallback */}
+                    {activeSet?.jersey_image_url ? (
+                      <div className="relative">
+                        <img
+                          src={activeSet.jersey_image_url}
+                          alt={`Trikot #${j.number}`}
+                          className="w-full h-28 object-cover"
+                        />
+                        <span className="absolute inset-0 flex items-center justify-center text-3xl font-black text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                          #{j.number}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="h-20 flex items-center justify-center bg-gray-50">
+                        <span className="text-2xl font-bold text-gray-800">#{j.number}</span>
+                      </div>
+                    )}
+                    {/* Size + status */}
+                    <div className="px-2 py-1.5 flex items-center justify-between gap-1">
+                      <span className="text-xs text-gray-500 font-medium">{j.size}</span>
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0 ${STATUS_COLORS[j.status]}`}>{j.status}</span>
+                    </div>
+                    {/* Edit/delete on hover */}
                     <div className="absolute top-1 right-1 hidden group-hover:flex gap-0.5">
                       <button
                         onClick={() => { setEditingJersey(j); setJerseyForm({ number: String(j.number), size: j.size, status: j.status }); setShowJerseyForm(true); setErr(null); }}
-                        className="text-xs p-1 bg-gray-100 hover:bg-gray-200 rounded"
+                        className="text-xs p-1 bg-white/80 hover:bg-white rounded shadow"
                       >✎</button>
-                      <button onClick={() => deleteJersey(j.id)} className="text-xs p-1 bg-red-50 hover:bg-red-100 rounded text-red-600">×</button>
+                      <button onClick={() => deleteJersey(j.id)} className="text-xs p-1 bg-white/80 hover:bg-red-100 rounded shadow text-red-600">×</button>
                     </div>
                   </div>
                 ))}
