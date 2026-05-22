@@ -85,7 +85,7 @@ export default function TrikotsClient({ sets, jerseys, players }: Props) {
       const { error } = await supabase.storage.from("jersey-images").upload(`${setId}/${key}.${ext}`, file, { upsert: true });
       if (!error) {
         const { data } = supabase.storage.from("jersey-images").getPublicUrl(`${setId}/${key}.${ext}`);
-        updates[imgKey] = data.publicUrl;
+        updates[imgKey] = `${data.publicUrl}?t=${Date.now()}`;
       }
     }
     return updates;
