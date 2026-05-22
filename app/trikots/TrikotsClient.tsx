@@ -199,7 +199,9 @@ export default function TrikotsClient({ sets, jerseys, players }: Props) {
                   className="w-full text-left bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                 >
                   {set.jersey_image_url ? (
-                    <img src={set.jersey_image_url} alt={set.name} className="w-full h-44 object-cover" />
+                    <div className="bg-gray-50 p-3">
+                      <img src={set.jersey_image_url} alt={set.name} className="w-full h-40 object-contain drop-shadow-sm" />
+                    </div>
                   ) : (
                     <div className="w-full h-44 bg-gray-50 flex items-center justify-center">
                       <span className="text-6xl opacity-30">👕</span>
@@ -267,7 +269,9 @@ export default function TrikotsClient({ sets, jerseys, players }: Props) {
               }`}
             >
               {img ? (
-                <img src={img} alt={label} className="w-full h-24 object-cover" />
+                <div className="bg-gray-50 px-2 pt-2">
+                  <img src={img} alt={label} className="w-full h-20 object-contain drop-shadow-sm" />
+                </div>
               ) : (
                 <div className="w-full h-24 bg-gray-50 flex items-center justify-center">
                   <span className="text-4xl opacity-40">{emoji}</span>
