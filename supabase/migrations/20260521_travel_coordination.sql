@@ -1,5 +1,4 @@
--- Travel responses: who comes how to a game
-create table travel_responses (
+create table if not exists travel_responses (
   id uuid primary key default gen_random_uuid(),
   event_id uuid references events(id) on delete cascade not null,
   player_name text not null,
@@ -9,20 +8,16 @@ create table travel_responses (
   unique(event_id, player_name)
 );
 alter table travel_responses enable row level security;
-create policy "open" on travel_responses for all using (true) with check (true);
 
--- Equipment items loaded into a specific car
-create table car_equipment (
+create table if not exists car_equipment (
   id uuid primary key default gen_random_uuid(),
   travel_response_id uuid references travel_responses(id) on delete cascade not null,
   item text not null,
   unique(travel_response_id, item)
 );
 alter table car_equipment enable row level security;
-create policy "open" on car_equipment for all using (true) with check (true);
 
--- Per-event checklist (seeded with defaults on first open)
-create table event_checklist (
+create table if not exists event_checklist (
   id uuid primary key default gen_random_uuid(),
   event_id uuid references events(id) on delete cascade not null,
   item text not null,
@@ -32,4 +27,16 @@ create table event_checklist (
   unique(event_id, item)
 );
 alter table event_checklist enable row level security;
-create policy "open" on event_checklist for all using (true) with check (true);
+
+do $$
+begin
+  if not exists (select 1 from pg_policies where tablename = 'travel_responses' and policyname = 'open') then
+    create policy "open" on travel_responses for all using (true) with check (true);
+  end if;
+  if not exists (select 1 from pg_policies where tablename = 'car_equipment' and policyname = 'open') then
+    create policy "open" on car_equipment for all using (true) with check (true);
+  end if;
+  if not exists (select 1 from pg_policies where tablename = 'event_checklist' and policyname = 'open') then
+    create policy "open" on event_checklist for all using (true) with check (true);
+  end if;
+end $$;
