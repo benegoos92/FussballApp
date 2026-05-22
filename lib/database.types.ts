@@ -40,9 +40,9 @@ export type Database = {
         Relationships: []
       }
       jerseys: {
-        Row: { created_at: string; id: string; number: number; set_id: string; size: string; status: Database["public"]["Enums"]["jersey_status"] }
-        Insert: { created_at?: string; id?: string; number: number; set_id: string; size: string; status?: Database["public"]["Enums"]["jersey_status"] }
-        Update: { created_at?: string; id?: string; number?: number; set_id?: string; size?: string; status?: Database["public"]["Enums"]["jersey_status"] }
+        Row: { created_at: string; id: string; number: number | null; set_id: string; size: string; status: Database["public"]["Enums"]["jersey_status"]; category: "jersey" | "shorts" | "socks" }
+        Insert: { created_at?: string; id?: string; number?: number | null; set_id: string; size: string; status?: Database["public"]["Enums"]["jersey_status"]; category?: "jersey" | "shorts" | "socks" }
+        Update: { created_at?: string; id?: string; number?: number | null; set_id?: string; size?: string; status?: Database["public"]["Enums"]["jersey_status"]; category?: "jersey" | "shorts" | "socks" }
         Relationships: []
       }
       penalties: {
