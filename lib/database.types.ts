@@ -34,9 +34,9 @@ export type Database = {
         Relationships: []
       }
       jersey_sets: {
-        Row: { created_at: string; id: string; name: string }
-        Insert: { created_at?: string; id?: string; name: string }
-        Update: { created_at?: string; id?: string; name?: string }
+        Row: { created_at: string; id: string; name: string; jersey_image_url: string | null; shorts_image_url: string | null; socks_image_url: string | null }
+        Insert: { created_at?: string; id?: string; name: string; jersey_image_url?: string | null; shorts_image_url?: string | null; socks_image_url?: string | null }
+        Update: { created_at?: string; id?: string; name?: string; jersey_image_url?: string | null; shorts_image_url?: string | null; socks_image_url?: string | null }
         Relationships: []
       }
       jerseys: {
