@@ -2,14 +2,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import type { Spieltag } from "./page";
+import type { Database } from "@/lib/database.types";
 
-interface Teilnehmer { id: string; name: string; player_id: string | null; created_at: string }
-interface Spiel {
-  id: string; spieltag_id: string; openligadb_id: number | null;
-  heim_team: string; gast_team: string; kickoff: string | null;
-  heim_tore_result: number | null; gast_tore_result: number | null; created_at: string;
-}
-interface Spieltag { id: string; spieltag: number; saison: string; deadline: string | null; created_at: string; tipp_spiele: Spiel[] }
+type Teilnehmer = Database["public"]["Tables"]["tipp_teilnehmer"]["Row"];
+type Spiel = Database["public"]["Tables"]["tipp_spiele"]["Row"];
 interface Tipp { id: string; spiel_id: string; teilnehmer_id: string; heim_tore: number; gast_tore: number; punkte: number | null }
 
 type Tab = "tipps" | "ergebnisse" | "tabelle";
