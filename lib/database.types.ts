@@ -89,6 +89,30 @@ export type Database = {
         Update: { id?: string; event_id?: string; item?: string; checked?: boolean; checked_by?: string | null; sort_order?: number }
         Relationships: []
       }
+      tipp_teilnehmer: {
+        Row: { id: string; name: string; player_id: string | null; created_at: string }
+        Insert: { id?: string; name: string; player_id?: string | null; created_at?: string }
+        Update: { id?: string; name?: string; player_id?: string | null; created_at?: string }
+        Relationships: []
+      }
+      tipp_spieltage: {
+        Row: { id: string; spieltag: number; saison: string; deadline: string | null; created_at: string }
+        Insert: { id?: string; spieltag: number; saison?: string; deadline?: string | null; created_at?: string }
+        Update: { id?: string; spieltag?: number; saison?: string; deadline?: string | null; created_at?: string }
+        Relationships: []
+      }
+      tipp_spiele: {
+        Row: { id: string; spieltag_id: string; openligadb_id: number | null; heim_team: string; gast_team: string; kickoff: string | null; heim_tore_result: number | null; gast_tore_result: number | null; created_at: string }
+        Insert: { id?: string; spieltag_id: string; openligadb_id?: number | null; heim_team: string; gast_team: string; kickoff?: string | null; heim_tore_result?: number | null; gast_tore_result?: number | null; created_at?: string }
+        Update: { id?: string; spieltag_id?: string; openligadb_id?: number | null; heim_team?: string; gast_team?: string; kickoff?: string | null; heim_tore_result?: number | null; gast_tore_result?: number | null; created_at?: string }
+        Relationships: []
+      }
+      tipps: {
+        Row: { id: string; spiel_id: string; teilnehmer_id: string; heim_tore: number; gast_tore: number; punkte: number | null; created_at: string; updated_at: string }
+        Insert: { id?: string; spiel_id: string; teilnehmer_id: string; heim_tore: number; gast_tore: number; punkte?: number | null; created_at?: string; updated_at?: string }
+        Update: { id?: string; spiel_id?: string; teilnehmer_id?: string; heim_tore?: number; gast_tore?: number; punkte?: number | null; created_at?: string; updated_at?: string }
+        Relationships: []
+      }
     }
     Views: { [_ in never]: never }
     Functions: { [_ in never]: never }
