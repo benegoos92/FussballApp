@@ -3,14 +3,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const tabs = [
-  { href: "/",        label: "Start",    icon: "🏠", exact: true },
-  { href: "/kalender", label: "Kalender", icon: "📅" },
-  { href: "/termine",  label: "Termine",  icon: "📌" },
-  { href: "/spieler",  label: "Spieler",  icon: "👥" },
-  { href: "/strafen",  label: "Strafen",  icon: "💸" },
-  { href: "/kasse",    label: "Kasse",    icon: "💰" },
-  { href: "/dienste",  label: "Dienste",  icon: "🔧" },
-  { href: "/trikots",  label: "Trikots",  icon: "👕" },
+  { href: "/",           label: "Start",    icon: "🏠", exact: true },
+  { href: "/kalender",   label: "Kalender", icon: "📅" },
+  { href: "/termine",    label: "Termine",  icon: "📌" },
+  { href: "/spieler",    label: "Spieler",  icon: "👥" },
+  { href: "/tippspiel",  label: "Tippspiel", icon: "🎯" },
+  { href: "/strafen",    label: "Strafen",  icon: "💸" },
+  { href: "/kasse",      label: "Kasse",    icon: "💰" },
+  { href: "/dienste",    label: "Dienste",  icon: "🔧" },
+  { href: "/trikots",    label: "Trikots",  icon: "👕" },
 ];
 
 export default function MainNav() {
